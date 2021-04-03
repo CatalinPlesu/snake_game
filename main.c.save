@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+int DEFAULT_WINDOW_WIDTH = 800;
+int DEFAULT_WINDOW_HEIGHT = 600;
+int SNAKE_SIZE = 50;
+int SNAKE_R = 255;
+int SNAKE_G = 255;
+int SNAKE_B = 255;
+int SNAKE_A = 255;
+
+#include "sdl_cat.h"
+#include "snake_logic.h"
+
+int main(int argc, char *argv[])
+{
+    snake *head = forge_node(5, 5);
+    snake *tail = head;
+
+    SDL_Window *main_window;
+    main_window = initMainWindow();
+    if (main_window == NULL)
+    {
+        quit(NULL);
+        return EXIT_FAILURE;
+    }
+
+    SDL_Renderer *main_window_renderer;
+    main_window_renderer = SDL_CreateRenderer(main_window, -1, SDL_RENDERER_ACCELERATED);
+    if (main_window_renderer == NULL)
+    {
+        printf("Renderer could not be created!\n");
+        quit(main_window);
+        return EXIT_FAILURE;
+    }
+
+    int gogogo;
+
+    SDL_Event event;
+
+    gogogo = 1;
+    int x = 150, y = 150;
+    int vx = 1, vy = 0;
+
+    grow_snake(&tail, vx, vy);
+    grow_snake(&tail, vx, vy);
+    grow_snake(&tail, vx, vy);
+    grow_snake(&tail, vx, vy);
+    grow_snake(&tail, vx, vy);
+    grow_snake(&tail, vx, vy);
+    grow_snake(&tail, vx, vy);
+    clock_t start = 0;
+    clock_t end;
+    while (gogogo)
+    {
+        SDL_SetRenderDrawColor(main_window_renderer, 50, 50, 50, 10);
+        SDL_RenderClear(main_window_renderer);
+        SDL_RenderPresent(main_window_renderer);
+
+        // grow_snake(&tail, vx, vy);
+        // filledCircleRGBA(main_window_renderer, 300, 300, 75, 255, 0, 0, 255);
+        end = clock();
+        start = why_move_snake(start, end);
+        if (!start)
+            move_snake(&head, &tail, vx, vy);
+
+        snake *t = head;
+        while (t)
+        {
+            boxRGBA(main_window_renderer, SNAKE_SIZE * t->x, SNAKE_SIZE * t->y, SNAKE_SIZE * t->x + SNAKE_SIZE, SNAKE_SIZE * t->y + SNAKE_SIZE, t->r, t->g, t->b, SNAKE_A);
+            t = t->next;
+        }
+        // boxRGBA(main_window_renderer, x, y, x + SNAKE_SIZE, y + SNAKE_SIZE, SNAKE_R, SNAKE_G, SNAKE_B, SNAKE_A);
+
+        SDL_RenderPresent(main_window_renderer);
+        SDL_Delay(50);
+        SDL_WaitEventTimeout(&event, 1);
+        if (event.type == SDL_QUIT)
+            gogogo = 0;
+        else if (event.type == SDL_KEYDOWN)
+        {
+            // printf("%d\n", event.key.keysym.sym);
+            if (event.key.keysym.sym == SDLK_ESCAPE)
+            {
+
+                printf("ESC\n");
+
+                gogogo = 0;
+            }
+
+            if (event.key.keysym.sym == SDLK_RIGHT)
+            {
+
+                printf("RIGHT\n");
+                vx = 1;
+                vy = 0;
+            }
+
+            if (event.key.keysym.sym == SDLK_LEFT)
+            {
+                vx = -1;
+                vy = 0;
+                printf("LEFT\n");
+            }
+
+            if (event.key.keysym.sym == SDLK_UP)
+            {
+                vx = 0;
+                vy = -1;
+                printf("UP\n");
+            }
+            if (event.key.keysym.sym == SDLK_DOWN)
+            {
+                vx = 0;
+                vy = 1;
+                printf("DOWN\n");
+            }
+
+            // grow_snake(&tail, vx, vy);
+        }
+    }
+    SDL_DestroyRenderer(main_window_renderer);
+    quit(main_window);
+
+    return EXIT_SUCCESS;
+}x
