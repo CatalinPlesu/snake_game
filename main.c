@@ -71,9 +71,11 @@ int main(int argc, char *argv[])
         eat_if_food(head, &tail, &snake_food, &score);
 
         snake *t = head;
+            boxRGBA(main_window_renderer, SNAKE_SIZE * t->x, SNAKE_SIZE * t->y, SNAKE_SIZE * t->x + SNAKE_SIZE, SNAKE_SIZE * t->y + SNAKE_SIZE, 255, 0, 0, SNAKE_A);
+        t=t->next;
         while (t)
         {
-            boxRGBA(main_window_renderer, SNAKE_SIZE * t->x, SNAKE_SIZE * t->y, SNAKE_SIZE * t->x + SNAKE_SIZE, SNAKE_SIZE * t->y + SNAKE_SIZE, t->r, t->g, t->b, SNAKE_A);
+            boxRGBA(main_window_renderer, SNAKE_SIZE * t->x, SNAKE_SIZE * t->y, SNAKE_SIZE * t->x + SNAKE_SIZE, SNAKE_SIZE * t->y + SNAKE_SIZE, 0, 255, 0, SNAKE_A);
             t = t->next;
         }
         boxRGBA(main_window_renderer, SNAKE_SIZE * snake_food->x, SNAKE_SIZE * snake_food->y, SNAKE_SIZE * snake_food->x + SNAKE_SIZE, SNAKE_SIZE * snake_food->y + SNAKE_SIZE, snake_food->r, snake_food->g, snake_food->b, SNAKE_A);
